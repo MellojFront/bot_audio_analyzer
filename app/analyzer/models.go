@@ -15,4 +15,6 @@ type TrackInfo struct {
 	TruePeak     string
 	LRA          string
 	WaveformPath string
+
+	SpectrogramPath string
 }

@@ -30,6 +30,14 @@ func Analyze(path string) (*TrackInfo, error) {
 		return nil, err
 	}
 
+	spectrogramPath, err := buildSpectrogramPath(path)
+	if err != nil {
+		return nil, err
+	}
+	if err := ffmpeg.GenerateSpectrogram(path, spectrogramPath); err != nil {
+		return nil, err
+	}
+
 	if err := ffmpeg.GenerateWaveform(path, waveformPath); err != nil {
 		return nil, err
 	}
@@ -58,10 +66,12 @@ func Analyze(path string) (*TrackInfo, error) {
 		BitDepth:   formatter.BitDepth(audioStream.BitsPerSample, audioStream.BitsPerRawSample),
 		FileSize:   formatter.FileSize(file.Size()),
 
-		LUFS:         loudness.InputI + " LUFS",
-		TruePeak:     loudness.InputTP + " dBTP",
-		LRA:          loudness.InputLRA + " LU",
-		WaveformPath: waveformPath,
+		LUFS:     loudness.InputI + " LUFS",
+		TruePeak: loudness.InputTP + " dBTP",
+		LRA:      loudness.InputLRA + " LU",
+
+		WaveformPath:    waveformPath,
+		SpectrogramPath: spectrogramPath,
 	}
 	return info, nil
 }
@@ -78,6 +88,22 @@ func buildWaveformPath(inputPath string) (string, error) {
 	nameWithoutExtension := strings.TrimSuffix(fileName, extension)
 
 	outputFileName := nameWithoutExtension + "_waveform.png"
+
+	return filepath.Join(outputDir, outputFileName), nil
+}
+
+func buildSpectrogramPath(inputPath string) (string, error) {
+	const outputDir = "output"
+
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		return "", fmt.Errorf("create output directory: %w", err)
+	}
+
+	fileName := filepath.Base(inputPath)
+	extension := filepath.Ext(fileName)
+	nameWithoutExtension := strings.TrimSuffix(fileName, extension)
+
+	outputFileName := nameWithoutExtension + "_spectrogram.png"
 
 	return filepath.Join(outputDir, outputFileName), nil
 }

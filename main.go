@@ -40,5 +40,6 @@ func main() {
 	fmt.Println("True Peak:", info.TruePeak)
 	fmt.Println("Диапазон громкости:", info.LRA)
 	fmt.Println("Waveform:", info.WaveformPath)
+	fmt.Println("Spectrogram:", info.SpectrogramPath)
 
 }
