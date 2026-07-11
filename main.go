@@ -28,7 +28,7 @@ func main() {
 	}
 
 	fmt.Println("Файл:", info.Name)
-	fmt.Println("Длиьтельность:", info.Duration)
+	fmt.Println("Длительность:", info.Duration)
 	fmt.Println("Битрейт:", info.Bitrate)
 	fmt.Println("Формат:", info.Format)
 	fmt.Println("Sample Rate:", info.SampleRate)
@@ -39,5 +39,6 @@ func main() {
 	fmt.Println("Громкость:", info.LUFS)
 	fmt.Println("True Peak:", info.TruePeak)
 	fmt.Println("Диапазон громкости:", info.LRA)
+	fmt.Println("Waveform:", info.WaveformPath)
 
 }

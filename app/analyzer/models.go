@@ -11,7 +11,8 @@ type TrackInfo struct {
 	SampleRate string
 	Channels   string
 
-	LUFS     string
-	TruePeak string
-	LRA      string
+	LUFS         string
+	TruePeak     string
+	LRA          string
+	WaveformPath string
 }

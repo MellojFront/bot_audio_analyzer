@@ -5,6 +5,8 @@ import (
 	"bot_audio_analyzer/app/formatter"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 func Analyze(path string) (*TrackInfo, error) {
@@ -21,6 +23,15 @@ func Analyze(path string) (*TrackInfo, error) {
 	file, err := os.Stat(path)
 	if err != nil {
 		return nil, fmt.Errorf("get file information: %w", err)
+	}
+
+	waveformPath, err := buildWaveformPath(path)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := ffmpeg.GenerateWaveform(path, waveformPath); err != nil {
+		return nil, err
 	}
 
 	var audioStream *ffmpeg.Stream
@@ -47,9 +58,26 @@ func Analyze(path string) (*TrackInfo, error) {
 		BitDepth:   formatter.BitDepth(audioStream.BitsPerSample, audioStream.BitsPerRawSample),
 		FileSize:   formatter.FileSize(file.Size()),
 
-		LUFS:     loudness.InputI + " LUFS",
-		TruePeak: loudness.InputTP + " dBTP",
-		LRA:      loudness.InputLRA + " LU",
+		LUFS:         loudness.InputI + " LUFS",
+		TruePeak:     loudness.InputTP + " dBTP",
+		LRA:          loudness.InputLRA + " LU",
+		WaveformPath: waveformPath,
 	}
 	return info, nil
+}
+
+func buildWaveformPath(inputPath string) (string, error) {
+	const outputDir = "output"
+
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		return "", fmt.Errorf("create output directory: %w", err)
+	}
+
+	fileName := filepath.Base(inputPath)
+	extension := filepath.Ext(fileName)
+	nameWithoutExtension := strings.TrimSuffix(fileName, extension)
+
+	outputFileName := nameWithoutExtension + "_waveform.png"
+
+	return filepath.Join(outputDir, outputFileName), nil
 }
