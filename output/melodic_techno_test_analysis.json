@@ -1,0 +1,16 @@
+{
+  "name": "audio/melodic_techno_test.wav",
+  "duration": "00:32",
+  "bitrate": "1411 kbps",
+  "format": "wav",
+  "codec": "pcm_s16le",
+  "bit_depth": "16 bit",
+  "file_size": "5.54 MB",
+  "sample_rate": "44100Hz",
+  "channels": "stereo",
+  "lufs": "-10.68 LUFS",
+  "true_peak": "0.98 dBTP",
+  "lra": "0.70 LU",
+  "waveform_path": "output/melodic_techno_test_waveform.png",
+  "spectrogram_path": "output/melodic_techno_test_spectrogram.png"
+}

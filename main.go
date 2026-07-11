@@ -2,6 +2,7 @@ package main
 
 import (
 	"bot_audio_analyzer/app/analyzer"
+	"bot_audio_analyzer/app/exporter"
 	"fmt"
 	"log"
 	"os"
@@ -27,6 +28,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	jsonPath, err := exporter.ToJSON(info, path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Println("Файл:", info.Name)
 	fmt.Println("Длительность:", info.Duration)
 	fmt.Println("Битрейт:", info.Bitrate)
@@ -41,5 +47,6 @@ func main() {
 	fmt.Println("Диапазон громкости:", info.LRA)
 	fmt.Println("Waveform:", info.WaveformPath)
 	fmt.Println("Spectrogram:", info.SpectrogramPath)
+	fmt.Println("JSON:", jsonPath)
 
 }
