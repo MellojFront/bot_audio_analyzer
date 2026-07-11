@@ -10,4 +10,8 @@ type TrackInfo struct {
 	FileSize   string
 	SampleRate string
 	Channels   string
+
+	LUFS     string
+	TruePeak string
+	LRA      string
 }

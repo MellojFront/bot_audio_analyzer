@@ -33,7 +33,11 @@ func main() {
 	fmt.Println("Формат:", info.Format)
 	fmt.Println("Sample Rate:", info.SampleRate)
 	fmt.Println("Каналы:", info.Channels)
-	fmt.Print("Кодек:", info.Codec)
-	fmt.Print("Битовая глубина:", info.BitDepth)
+	fmt.Println("Кодек:", info.Codec)
+	fmt.Println("Битовая глубина:", info.BitDepth)
+	fmt.Println("Размер файла", info.FileSize)
+	fmt.Println("Громкость:", info.LUFS)
+	fmt.Println("True Peak:", info.TruePeak)
+	fmt.Println("Диапазон громкости:", info.LRA)
 
 }

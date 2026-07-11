@@ -20,3 +20,12 @@ type Stream struct {
 	BitsPerSample    int    `json:"bits_per_sample"`
 	BitsPerRawSample string `json:"bits_per_raw_sample"`
 }
+
+// InputI   — Integrated Loudness
+// InputTP  — True Peak
+// InputLRA — Loudness Range
+type LoudnessResponse struct {
+	InputI   string `json:"input_i"`
+	InputTP  string `json:"input_tp"`
+	InputLRA string `json:"input_lra"`
+}

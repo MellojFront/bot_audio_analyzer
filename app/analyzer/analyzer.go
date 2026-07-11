@@ -4,12 +4,23 @@ import (
 	"bot_audio_analyzer/app/ffmpeg"
 	"bot_audio_analyzer/app/formatter"
 	"fmt"
+	"os"
 )
 
 func Analyze(path string) (*TrackInfo, error) {
 	probe, err := ffmpeg.Probe(path)
 	if err != nil {
 		return nil, err
+	}
+
+	loudness, err := ffmpeg.AnalyzeLoudness(path)
+	if err != nil {
+		return nil, err
+	}
+
+	file, err := os.Stat(path)
+	if err != nil {
+		return nil, fmt.Errorf("get file information: %w", err)
 	}
 
 	var audioStream *ffmpeg.Stream
@@ -33,10 +44,12 @@ func Analyze(path string) (*TrackInfo, error) {
 		Codec:      audioStream.CodecName,
 		SampleRate: audioStream.SampleRate + "Hz",
 		Channels:   formatter.Channels(audioStream.Channels),
-		BitDepth: formatter.BitDepth(
-			audioStream.BitsPerSample,
-			audioStream.BitsPerRawSample,
-		),
+		BitDepth:   formatter.BitDepth(audioStream.BitsPerSample, audioStream.BitsPerRawSample),
+		FileSize:   formatter.FileSize(file.Size()),
+
+		LUFS:     loudness.InputI + " LUFS",
+		TruePeak: loudness.InputTP + " dBTP",
+		LRA:      loudness.InputLRA + " LU",
 	}
 	return info, nil
 }
