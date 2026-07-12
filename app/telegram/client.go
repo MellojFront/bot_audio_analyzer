@@ -29,7 +29,7 @@ func NewClient(token string) (*Client, error) {
 		token:   token,
 		baseURL: defaultBaseURL,
 		httpClient: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 40 * time.Second,
 		},
 	}, nil
 }

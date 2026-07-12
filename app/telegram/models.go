@@ -20,3 +20,31 @@ type APIResponse struct {
 	ErrorCode   int             `json:"error_code"`
 	Result      json.RawMessage `json:"result"`
 }
+
+type GetUpdatesRequest struct {
+	Offset  int64 `json:"offset,omitempty"`
+	Timeout int   `json:"timeout,omitempty"`
+}
+
+type GetUpdatesResponse struct {
+	OK          bool     `json:"ok"`
+	Result      []Update `json:"result"`
+	ErrorCode   int      `json:"error_code,omitempty"`
+	Description string   `json:"description,omitempty"`
+}
+
+type Update struct {
+	UpdateID int64    `json:"update_id"`
+	Message  *Message `json:"message,omitempty"`
+}
+
+type Message struct {
+	MessageID int64  `json:"message_id"`
+	Text      string `json:"text"`
+	Chat      Chat   `json:"chat"`
+}
+
+type Chat struct {
+	ID   int64  `json:"id"`
+	Type string `json:"type"`
+}
