@@ -19,7 +19,12 @@ cp .env.example .env
 
 ```env
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-TELEGRAM_CHAT_ID=your_telegram_chat_id
 ```
 
-Токен Telegram-бота можно получить через BotFather.
+Токен Telegram-бота можно получить через **BotFather**.
+
+## Как это работает
+
+После запуска бот автоматически получает `chat_id` из входящих сообщений Telegram через Bot API (`getUpdates`).
+
+Дополнительная настройка `TELEGRAM_CHAT_ID` больше не требуется.
