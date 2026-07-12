@@ -40,11 +40,50 @@ type Update struct {
 
 type Message struct {
 	MessageID int64  `json:"message_id"`
-	Text      string `json:"text"`
+	Text      string `json:"text,omitempty"`
 	Chat      Chat   `json:"chat"`
+
+	Audio    *Audio    `json:"audio,omitempty"`
+	Document *Document `json:"document,omitempty"`
 }
 
 type Chat struct {
 	ID   int64  `json:"id"`
 	Type string `json:"type"`
+}
+
+// save content on telegram file model
+type Audio struct {
+	FileID    string `json:"file_id"`
+	FileName  string `json:"file_name,omitempty"`
+	MimeType  string `json:"mime_type,omitempty"`
+	FileSize  int64  `json:"file_size,omitempty"`
+	Duration  int    `json:"duration,omitempty"`
+	Title     string `json:"title,omitempty"`
+	Performer string `json:"performer,omitempty"`
+}
+
+type Document struct {
+	FileID   string `json:"file_id"`
+	FileName string `json:"file_name,omitempty"`
+	MimeType string `json:"mime_type,omitempty"`
+	FileSize int64  `json:"file_size,omitempty"`
+}
+
+// model getFile
+type GetFileRequest struct {
+	FileID string `json:"file_id"`
+}
+
+type GetFileResponse struct {
+	OK          bool         `json:"ok"`
+	Result      TelegramFile `json:"result"`
+	ErrorCode   int          `json:"error_code,omitempty"`
+	Description string       `json:"description,omitempty"`
+}
+
+type TelegramFile struct {
+	FileID   string `json:"file_id"`
+	FilePath string `json:"file_path"`
+	FileSize int64  `json:"file_size,omitempty"`
 }
