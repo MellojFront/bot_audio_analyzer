@@ -7,7 +7,14 @@ import (
 )
 
 func Probe(path string) (*FFProbeResponse, error) {
-	cmd := exec.Command("ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", "-show_streams", "audio/melodic_techno_test.wav")
+	cmd := exec.Command(
+		"ffprobe",
+		"-v", "quiet",
+		"-print_format", "json",
+		"-show_format",
+		"-show_streams",
+		path,
+	)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -15,8 +22,10 @@ func Probe(path string) (*FFProbeResponse, error) {
 	}
 
 	var probe FFProbeResponse
+
 	if err := json.Unmarshal(out, &probe); err != nil {
-		return nil, fmt.Errorf("parse json: %w", err)
+		return nil, fmt.Errorf("parse ffprobe json: %w", err)
 	}
+
 	return &probe, nil
 }

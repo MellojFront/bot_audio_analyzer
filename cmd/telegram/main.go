@@ -42,21 +42,30 @@ func main() {
 				continue
 			}
 
-			chatID := update.Message.Chat.ID
-			text := update.Message.Text
+			message := update.Message
+			chatID := message.Chat.ID
 
-			switch text {
-			case "/start":
+			switch {
+			case message.Text == "/start":
 				markdown := `# Audio Analyzer
 
-Отправь мне аудиофайл, и я выполню анализ:
+Отправь мне аудиофайл в формате:
+
+- WAV
+- MP3
+- FLAC
+- M4A
+- AAC
+- OGG
+
+Я отправлю:
 
 - технические параметры;
 - LUFS;
 - True Peak;
 - LRA;
 - waveform;
-- спектрограмма.`
+- спектрограмму.`
 
 				if err := client.SendRichMessage(
 					context.Background(),
@@ -66,49 +75,39 @@ func main() {
 					log.Printf("send /start response: %v", err)
 				}
 
-			default:
-				markdown := `Я пока понимаю только команду **/start**.
-
-Следующий этап — приём аудиофайлов.`
-
+			case message.Audio != nil || message.Document != nil:
 				if err := client.SendRichMessage(
 					context.Background(),
 					chatID,
-					markdown,
+					"## Анализ начат\n\nФайл получен и обрабатывается.",
+				); err != nil {
+					log.Printf("send processing message: %v", err)
+				}
+
+				if err := client.HandleAudioMessage(
+					context.Background(),
+					message,
+				); err != nil {
+					log.Printf("handle audio: %v", err)
+
+					if sendErr := client.SendRichMessage(
+						context.Background(),
+						chatID,
+						"## Ошибка\n\nНе удалось обработать аудиофайл.",
+					); sendErr != nil {
+						log.Printf("send error response: %v", sendErr)
+					}
+				}
+
+			default:
+				if err := client.SendRichMessage(
+					context.Background(),
+					chatID,
+					"Отправь аудиофайл или используй команду **/start**.",
 				); err != nil {
 					log.Printf("send default response: %v", err)
 				}
 			}
 		}
 	}
-	/*
-				chatIDValue := os.Getenv("TELEGRAM_CHAT_ID")
-				if chatIDValue == "" {
-					log.Fatal("TELEGRAM_CHAT_ID is not set")
-				}
-
-				chatID, err := strconv.ParseInt(chatIDValue, 10, 64)
-				if err != nil {
-					log.Fatalf("invalid TELEGRAM_CHAT_ID: %v", err)
-				}
-
-				client, err := telegram.NewClient(token)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-			markdown := `# Анализ аудиофайла
-
-		| Параметр | Значение |
-		|:---|---:|
-		| Формат | WAV |
-		| Кодек | PCM S16LE |
-		| Битовая глубина | 16 bit |
-		| Частота | 44.1 kHz |
-		| Каналы | Stereo |
-		| LUFS | -9.42 |
-		| True Peak | -0.31 dBTP |
-		| LRA | 4.20 LU |`
-	*/
-
 }

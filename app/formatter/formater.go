@@ -52,7 +52,7 @@ func BitDepth(bitsPerSample int, bitsPerRawSample string) string {
 		return bitsPerRawSample + " bit"
 	}
 
-	return "неизвестно"
+	return "N/A"
 }
 
 func FileSize(bytes int64) string {
